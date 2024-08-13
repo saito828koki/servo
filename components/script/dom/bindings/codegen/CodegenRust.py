@@ -335,7 +335,7 @@ class CGMethodCall(CGThing):
             if requiredArgs > 0:
                 code = (
                     f"if argc < {requiredArgs} {{\n"
-                    f"    throw_type_error(*cx, \"Not enough arguments to {methodName}.\");\n"
+                    f'    throw_type_error(*cx, "Not enough arguments to {methodName}.");\n'
                     "    return false;\n"
                     "}")
                 self.cgRoot.prepend(
