@@ -26,7 +26,7 @@ fn test_exit() {
     let (resource_thread, _private_resource_thread) = new_core_resource_thread(
         "".into(),
         None,
-        ProfilerChan(tx),
+        ProfilerChan::new(tx, false),
         MemProfilerChan(mtx),
         create_embedder_proxy(),
         None,

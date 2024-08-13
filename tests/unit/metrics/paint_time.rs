@@ -19,7 +19,7 @@ impl ProfilerMetadataFactory for DummyProfilerMetadataFactory {
 #[test]
 fn test_paint_metrics_construction() {
     let (sender, _) = ipc::channel().unwrap();
-    let profiler_chan = ProfilerChan(sender);
+    let profiler_chan = ProfilerChan::new(sender, false);
     let (layout_sender, _) = ipc::channel().unwrap();
     let (script_sender, _) = ipc::channel().unwrap();
     let paint_time_metrics = PaintTimeMetrics::new(
@@ -49,7 +49,7 @@ fn test_paint_metrics_construction() {
 
 fn test_common(display_list_is_contentful: bool, epoch: Epoch) -> PaintTimeMetrics {
     let (sender, _) = ipc::channel().unwrap();
-    let profiler_chan = ProfilerChan(sender);
+    let profiler_chan = ProfilerChan::new(sender, false);
     let (layout_sender, _) = ipc::channel().unwrap();
     let (script_sender, _) = ipc::channel().unwrap();
     let mut paint_time_metrics = PaintTimeMetrics::new(

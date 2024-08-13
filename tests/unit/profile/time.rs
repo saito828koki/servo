@@ -13,7 +13,7 @@ use servo_config::opts::OutputOptions;
 
 #[test]
 fn time_profiler_smoke_test() {
-    let chan = time::Profiler::create(&None, None);
+    let chan = time::Profiler::create(&None, None, false);
     assert!(true, "Can create the profiler thread");
 
     let (ipcchan, _ipcport) = ipc::channel().unwrap();
@@ -46,7 +46,7 @@ fn time_profiler_stats_test() {
 
 #[test]
 fn channel_profiler_test() {
-    let chan = time::Profiler::create(&Some(OutputOptions::Stdout(5.0)), None);
+    let chan = time::Profiler::create(&Some(OutputOptions::Stdout(5.0)), None, false);
     let (profiled_sender, profiled_receiver) = ProfiledIpc::channel(chan.clone()).unwrap();
     thread::spawn(move || {
         thread::sleep(Duration::from_secs(2));
@@ -71,7 +71,7 @@ fn channel_profiler_test() {
 
 #[test]
 fn bytes_channel_profiler_test() {
-    let chan = time::Profiler::create(&Some(OutputOptions::Stdout(5.0)), None);
+    let chan = time::Profiler::create(&Some(OutputOptions::Stdout(5.0)), None, false);
     let (profiled_sender, profiled_receiver) = ProfiledIpc::bytes_channel(chan.clone()).unwrap();
     thread::spawn(move || {
         thread::sleep(Duration::from_secs(2));

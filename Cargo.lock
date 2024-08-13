@@ -5150,7 +5150,6 @@ dependencies = [
  "ipc-channel",
  "log",
  "serde",
- "servo_config",
  "signpost",
  "time 0.1.45",
 ]

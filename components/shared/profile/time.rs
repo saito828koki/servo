@@ -7,7 +7,6 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use ipc_channel::ipc::IpcSender;
 use log::warn;
 use serde::{Deserialize, Serialize};
-use servo_config::opts;
 
 #[derive(Clone, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct TimerMetadata {
@@ -17,11 +16,18 @@ pub struct TimerMetadata {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct ProfilerChan(pub IpcSender<ProfilerMsg>);
+pub struct ProfilerChan {
+    sender: IpcSender<ProfilerMsg>,
+    signpost: bool,
+}
 
 impl ProfilerChan {
+    pub fn new(sender: IpcSender<ProfilerMsg>, signpost: bool) -> Self {
+        Self { sender, signpost }
+    }
+
     pub fn send(&self, msg: ProfilerMsg) {
-        if let Err(e) = self.0.send(msg) {
+        if let Err(e) = self.sender.send(msg) {
             warn!("Error communicating with the time profiler thread: {}", e);
         }
     }
@@ -136,7 +142,7 @@ pub fn profile<T, F>(
 where
     F: FnOnce() -> T,
 {
-    if opts::get().debug.signpost {
+    if profiler_chan.signpost {
         signpost::start(category as u32, &[0, 0, 0, (category as usize) >> 4]);
     }
     let start_time = SystemTime::now()
@@ -150,7 +156,7 @@ where
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_nanos();
-    if opts::get().debug.signpost {
+    if profiler_chan.signpost {
         signpost::end(category as u32, &[0, 0, 0, (category as usize) >> 4]);
     }
 

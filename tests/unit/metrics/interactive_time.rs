@@ -18,7 +18,7 @@ impl ProfilerMetadataFactory for DummyProfilerMetadataFactory {
 
 fn test_interactive() -> InteractiveMetrics {
     let (sender, _) = ipc::channel().unwrap();
-    let profiler_chan = ProfilerChan(sender);
+    let profiler_chan = ProfilerChan::new(sender, false);
     let mut interactive =
         InteractiveMetrics::new(profiler_chan, ServoUrl::parse("about:blank").unwrap());
 

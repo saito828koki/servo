@@ -169,7 +169,11 @@ pub struct Profiler {
 }
 
 impl Profiler {
-    pub fn create(output: &Option<OutputOptions>, file_path: Option<String>) -> ProfilerChan {
+    pub fn create(
+        output: &Option<OutputOptions>,
+        file_path: Option<String>,
+        signpost: bool,
+    ) -> ProfilerChan {
         let (chan, port) = ipc::channel().unwrap();
         match *output {
             Some(ref option) => {
@@ -232,7 +236,7 @@ impl Profiler {
             },
         }
 
-        ProfilerChan(chan)
+        ProfilerChan::new(chan, signpost)
     }
 
     pub fn new(
